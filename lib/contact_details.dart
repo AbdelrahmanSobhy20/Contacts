@@ -18,7 +18,6 @@ class _DetailsState extends State<Details> {
   TextEditingController tename = TextEditingController();
   TextEditingController tephone = TextEditingController();
   TextEditingController teurl = TextEditingController();
-  ContactProvider? provider;
   @override
   void initState() {
     // TODO: implement initState
@@ -44,51 +43,51 @@ class _DetailsState extends State<Details> {
           ),
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Image.network(
-              widget.contact.url,
-              fit: BoxFit.fill,
-            ),
-            TextField(
-              controller: tename,
-              decoration: const InputDecoration(
-                  hintText: "Contact Number",
-                  hintStyle:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ),
-            TextField(
-              controller: tephone,
-              decoration: const InputDecoration(
-                  hintText: "Contact Number",
-                  hintStyle:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ),
-            TextField(
-              controller: teurl,
-              decoration: const InputDecoration(
-                  hintText: "Contact Number",
-                  hintStyle:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              width: 300,
-              decoration: const BoxDecoration(
-                color: Color(0xFF0977CB),
-                borderRadius: BorderRadius.all(Radius.circular(5)),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Image.network(
+                widget.contact.url,
+                fit: BoxFit.fill,
               ),
-              child: TextButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Expanded(
-                          child: AlertDialog(
+              TextField(
+                controller: tename,
+                decoration: const InputDecoration(
+                    hintText: "Contact Number",
+                    hintStyle:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ),
+              TextField(
+                controller: tephone,
+                decoration: const InputDecoration(
+                    hintText: "Contact Number",
+                    hintStyle:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ),
+              TextField(
+                controller: teurl,
+                decoration: const InputDecoration(
+                    hintText: "Contact Number",
+                    hintStyle:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: 300,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF0977CB),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
                             title: const Text(
                               'Save Changes',
                               style: TextStyle(
@@ -115,16 +114,14 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                               TextButton(
-                                onPressed: () async {
+                                onPressed: ()  {
                                   ContactProvider.instance.update(Contact(
-                                    id: widget.contact.id,
-                                    name: widget.contact.name,
-                                    phoneNumber: widget.contact.phoneNumber,
-                                    url: widget.contact.url,
-                                  ));
-                                  setState(() {
-                                    Navigator.of(context).pop();
-                                  });},
+                                      id: widget.contact.id,
+                                      name: tename.text,
+                                      phoneNumber: tephone.text,
+                                      url: teurl.text));
+                                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>  const HomePage()), (route) => false);
+                                },
                                 child: const Text(
                                   'Yes',
                                   style: TextStyle(
@@ -134,37 +131,34 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                             ],
-                          ),
-                        );
-                      });
+                          );
+                        });
 
-                  setState(() {});
-                },
-                child: const Text(
-                  "SAVE",
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.white,
+                  },
+                  child: const Text(
+                    "SAVE",
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              width: 300,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(5)),
+              const SizedBox(
+                height: 20,
               ),
-              child: TextButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Expanded(
-                          child: AlertDialog(
+              Container(
+                width: 300,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
                             title: const Text(
                               'Delete Contact',
                               style: TextStyle(
@@ -192,12 +186,10 @@ class _DetailsState extends State<Details> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  setState(() async{
                                     var deleteContact = widget.contact.id;
-                                    await provider?.delete(deleteContact!);
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
-                                    print(deleteContact);
-                                  });
+                                    ContactProvider.instance
+                                        .delete(deleteContact!);
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>  const HomePage()), (route) => false);
                                 },
                                 child: const Text(
                                   'Yes',
@@ -208,21 +200,21 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                             ],
-                          ),
-                        );
-                      });
-                  setState(() {});
-                },
-                child: const Text(
-                  "Delete",
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Color(0xFF0977CB),
+                          );
+                        });
+                    setState(() {});
+                  },
+                  child: const Text(
+                    "Delete",
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Color(0xFF0977CB),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -142,7 +142,9 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Details(contact)));
+                              setState(() {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Details(contact)));
+                              });
                             },
                           ),
                           Text(
